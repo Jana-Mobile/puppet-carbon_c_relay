@@ -1,4 +1,4 @@
-# <%= @sysconfig_file %>: Managed by puppet.
+# This file is managed by Puppet. DO NOT EDIT.
 
 # Usage: <%= @package_name %> [-vdst] -f <config> [-p <port>] [-w <workers>] [-b <size>] [-q <size>]
 #
@@ -8,7 +8,7 @@
 #   -p  listen on <port> for connections, defaults to 2003
 #   -i  listen on <interface> for connections, defaults to all
 #   -l  write output to <file>, defaults to stdout/stderr
-#   -w  use <workers> worker threads, defaults to 4
+#   -w  use <workers> worker threads, defaults to # of cores
 #   -b  server send batch size, defaults to 2500
 #   -q  server queue size, defaults to 25000
 #   -L  server max stalls, defaults to 4
@@ -24,4 +24,24 @@
 #   -t  config test mode: prints rule matches from input on stdin
 #   -H  hostname: override hostname (used in statistics)
 
-ARGS=-p <%= @listen %> -i <%= @interface %> -w <%= @worker_threads %> -b <%= @server_batch_size %> -q <%= @server_queue_size %> -l <%= @log_dir %>/<%= @log_file %><% if @max_stalls -%> -L <%= @max_stalls %><% end -%><% if @listen_backlog -%> -B <%= @listen_backlog %><% end -%><% if @io_timeout -%> -T <%= @io_timeout %><% end -%><% if @carbon_cache_statistics -%> -m <% end -%><% if @statistics_sending_interval -%> -S <%= @statistics_sending_interval %><% end -%><% if @allowed_chars -%> -c <%= @allowed_chars %><% end -%><% if @statistics_hostname -%> -H <%= @statistics_hostname %><% end -%>
+<% if @operatingsystemmajrelease == '6' %>
+  <%- if @limit_as %>ulimit -v <%= @limit_as %><% end %>
+  <%- if @limit_cpu %>ulimit -t <%= @limit_cpu %><% end %>
+  <%- if @limit_fsize %>ulimit -f <%= @limit_fsize %><% end %>
+  <%- if @limit_nofile %>ulimit -n <%= @limit_nofile %><% end %>
+  <%- if @limit_nproc %>ulimit -u <%= @limit_nproc %><% end %>
+<% end -%>
+
+ARGS="-p <%= @listen -%>
+<% if @interface %> -i <%= @interface %><% end -%>
+ -l <%= @log_dir %>/<%= @log_file -%>
+<% if @worker_threads %> -w <%= @worker_threads %><% end -%>
+ -b <%= @server_batch_size -%>
+ -q <%= @server_queue_size -%>
+ -L <%= @max_stalls -%>
+ -S <%= @statistics_sending_interval -%>
+ -B <%= @listen_backlog -%>
+ -T <%= @io_timeout -%>
+<% if @statistics_non_cumulative %> -m<% end -%>
+<% if @allowed_chars %> -c '<%= @allowed_chars %>'<% end -%>
+<% if @statistics_hostname %> -H <%= @statistics_hostname %><% end %>"
