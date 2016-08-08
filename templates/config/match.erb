@@ -1,18 +1,18 @@
 
 <% if @comments -%>
-  <%- if @comments.is_a?(Array) -%>
-    <%- @comments.each do |comment| -%>
+  <%- @comments.each do |comment| -%>
 ## <%= comment %>
-    <%- end -%>
-  <%- else -%>
-## <%= @comments %>
   <%- end -%>
 <% end -%>
-match <%= @expression %>
-<% if @cluster_name.is_a?(Array) -%>
-  send to <%= @cluster_name.join(' ') %>
-<% else -%>
-  send to <%= @cluster_name %>
+match
+<%- @expressions.each do |expression| -%>
+    <%= expression %>
+<%- end -%>
+  send to
+<%- @clusters.each do |cluster| -%>
+    <%= cluster %>
 <% end -%>
-  <%if @stop %>stop<% end %>
+<%if @stop -%>
+  stop
+<% end -%>
   ;
