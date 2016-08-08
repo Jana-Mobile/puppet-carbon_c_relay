@@ -1,29 +1,27 @@
 #
 define carbon_c_relay::config::cluster (
-  $channel            = 'carbon_ch',
   $cluster_name       = $title,
-  $file               = undef,
-  $hosts              = [],
-  $replication_factor = undef
+  $comments           = [],
+  $destinations       = undef,
+  $replication_factor = 1,
+  $channel            = 'carbon_ch',
+  $useall             = false,
 ){
 
   validate_string($cluster_name)
+  validate_array($comments)
+  validate_array($destinations)
+  validate_integer($replication_factor)
 
-  if ! ($file == undef) {
-    validate_string( $file )
+  if ! ($channel in ['forward', 'any_of', 'failover', 'carbon_ch', 'fnv1a_ch', 'file']) {
+    fail("channel '${channel}' is not in ['forward', 'any_of', 'failover', 'carbon_ch', 'fnv1a_ch', 'file']")
   }
 
-  if ! ($channel in ['carbon_ch', 'fnv1a_ch', 'forward', 'file']) {
-    fail("channel '${channel}' is not in ['carbon_ch', 'fnv1a_ch', 'forward', 'file']")
-  }
-
-  unless is_array( $hosts ) {
-    fail("'hosts' param is not a array")
-  }
+  validate_bool($useall)
 
   concat::fragment { "cluster-${title}":
     target  => $carbon_c_relay::config_file,
     content => template('carbon_c_relay/config/cluster.erb'),
-    order   => '20',
+    order   => '02',
   }
 }
