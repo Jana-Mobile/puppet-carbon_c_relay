@@ -1,16 +1,16 @@
 # == Class carbon_c_relay::service
 #
-#
 class carbon_c_relay::service (
   $config_file      = $carbon_c_relay::config_file,
   $group            = $carbon_c_relay::group,
-  $init_file        = $carbon_c_relay::init_file,
   $limit_as         = $carbon_c_relay::limit_as,
   $limit_cpu        = $carbon_c_relay::limit_cpu,
   $limit_fsize      = $carbon_c_relay::limit_fsize,
-  $limit_no_file    = $carbon_c_relay::limit_no_file,
+  $limit_nofile     = $carbon_c_relay::limit_nofile,
   $limit_nproc      = $carbon_c_relay::limit_nproc,
   $log_dir          = $carbon_c_relay::log_dir,
+  $pid_dir          = $carbon_c_relay::pid_dir,
+  $pid_file         = $carbon_c_relay::pid_file,
   $service_enable   = $carbon_c_relay::service_enable,
   $service_ensure   = $carbon_c_relay::service_ensure,
   $service_file     = $carbon_c_relay::service_file,
@@ -25,6 +25,12 @@ class carbon_c_relay::service (
   }
 
   if $service_manage == true {
+    file { $pid_dir:
+      ensure => directory,
+      group  => $group,
+      mode   => '0644',
+      owner  => $user,
+    }
 
     file { $log_dir:
       ensure => directory,
@@ -43,17 +49,35 @@ class carbon_c_relay::service (
       content => template($service_template),
     }
 
-    exec { 'daemon-reload':
-      command     => '/bin/systemctl daemon-reload',
-      subscribe   => File[$carbon_c_relay::service_file],
-      refreshonly => true,
-      user        => 'root'
-    } ~>
 
-    service { $service_name:
-      ensure   => $service_ensure,
-      enable   => $service_enable,
-      provider => 'systemd',
+    case $::operatingsystemmajrelease {
+      '6': {
+	file { $limits_file:
+	  ensure  => file,
+	  group   => 'root',
+	  mode    => '0644',
+	  owner   => 'root',
+	  content => template($limits_file_template),
+	}
+	service { $service_name:
+	  ensure   => $service_ensure,
+	  enable   => $service_enable,
+	}
+      }
+
+      '7': {
+	exec { 'daemon-reload':
+	  command     => '/bin/systemctl daemon-reload',
+	  subscribe   => File[$carbon_c_relay::service_file],
+	  refreshonly => true,
+	  user        => 'root'
+	} ~>
+
+	service { $service_name:
+	  ensure   => $service_ensure,
+	  enable   => $service_enable,
+	}
+      }
     }
   }
 }
