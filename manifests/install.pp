@@ -1,3 +1,4 @@
+# == Class: carbon_c_relay::install
 #
 class carbon_c_relay::install (
   $group          = $carbon_c_relay::group,
