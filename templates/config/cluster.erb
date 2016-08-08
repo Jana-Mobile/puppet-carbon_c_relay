@@ -1,16 +1,16 @@
 
-cluster <%= @cluster_name %>
-<% if @file -%>
-  file <%= @file %>
-  ;
-<%- else -%>
-  <%- if @channel == "carbon_ch" || @channel == "fnv1a_ch" -%>
-  <%= @channel %> <% if @replication_factor.to_i > 1 -%>replication <%= @replication_factor %><% end %>
-  <%- else -%>
-  <%= @channel %>
+<% if @comments -%>
+  <%- @comments.each do |comment| -%>
+## <%= comment %>
   <%- end -%>
-  <%- @hosts.each do | host | -%>
-    <%= host['host'] %>:<%= host['port'] %><%if host['alias'] %>=<%= host['alias'] %><% end %><% if host['proto'] %> <%= host['proto'] %><% end %>
-  <%- end -%>
-  ;
 <% end -%>
+cluster <%= @cluster_name %>
+<%- if @channel == 'carbon_ch' || @channel == 'fnv1a_ch' || @channel == 'jump_fnv1a_ch' -%>
+  <%= @channel -%><% if @replication_factor.to_i > 1 %> replication <%= @replication_factor %><% end %>
+<%- else -%>
+  <%= @channel %>
+<%- end -%>
+<%- @destinations.each do | destination | -%>
+    <%= destination %>
+<%- end -%>
+  ;
