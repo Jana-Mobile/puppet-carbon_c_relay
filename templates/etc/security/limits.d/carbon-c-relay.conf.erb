@@ -1,21 +1,21 @@
 # This file is managed by Puppet. DO NOT EDIT.
-<% if @$limit_as %>
+<% if @limit_as %>
 # address space limit
-<%= @user %> - as <%= @$limit_as %>
+<%= @user %> - as <%= @limit_as %>
 <% end -%>
-<% if @$limit_cpu %>
+<% if @limit_cpu %>
 # max CPU time (MIN)
-<%= @user %> - cpu <%= @$limit_cpu %>
+<%= @user %> - cpu <%= @limit_cpu %>
 <% end -%>
-<% if @$limit_fsize %>
+<% if @limit_fsize %>
 # maximum filesize (KB)
-<%= @user %> - fsize <%= @$limit_fsize %>
+<%= @user %> - fsize <%= @limit_fsize %>
 <% end -%>
-<% if @$limit_nofile %>
+<% if @limit_nofile %>
 # ax number of open files
-<%= @user %> - nofile <%= @$limit_nofile %>
+<%= @user %> - nofile <%= @limit_nofile %>
 <% end -%>
-<% if @$limit_nproc %>
+<% if @limit_nproc %>
 # max number of processes
-<%= @user %> - nproc <%= @$limit_nproc %>
+<%= @user %> - nproc <%= @limit_nproc %>
 <% end -%>
