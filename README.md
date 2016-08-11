@@ -34,7 +34,7 @@ class { '::carbon_c_relay':
 }
 ```
 ### Example using Hiera
-```
+```puppet
 class { '::carbon_c_relay':
   config_clusters             => hiera('carbon_c_relay::config_clusters'),
   config_matches              => hiera('carbon_c_relay::config_matches'),
@@ -50,7 +50,7 @@ class { '::carbon_c_relay':
 ```
 
 YAML
-```
+```yaml
 ---
 carbon_c_relay::listen_backlog: 64
 carbon_c_relay::limit_nofile: 524288
