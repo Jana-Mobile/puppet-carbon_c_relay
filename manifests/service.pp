@@ -27,14 +27,7 @@ class carbon_c_relay::service (
   }
 
   if $service_manage == true {
-    file { $pid_dir:
-      ensure => directory,
-      group  => $group,
-      mode   => '0644',
-      owner  => $user,
-    }
-
-    file { $log_dir:
+    file { [ $pid_dir, $log_dir ]:
       ensure => directory,
       group  => $group,
       mode   => '0644',
@@ -43,23 +36,24 @@ class carbon_c_relay::service (
 
     File[$log_dir] ~> Service[$service_name]
 
+    File {
+        ensure  => file,
+        group   => 'root',
+        owner   => 'root',
+        mode    => '0644',
+    }
+
     case $::operatingsystemmajrelease {
       '6': {
-        file { $limits_file:
-          ensure  => file,
-          group   => 'root',
-          mode    => '0644',
-          owner   => 'root',
-          content => template($limits_template),
+        file {
+          $limits_file:
+            content => template($limits_template);
+
+          $service_file:
+            mode    => '0755',
+            content => template($service_template);
         }
 
-        file { $service_file:
-          ensure  => file,
-          group   => 'root',
-          mode    => '0755',
-          owner   => 'root',
-          content => template($service_template),
-        }
         service { $service_name:
           ensure   => $service_ensure,
           enable   => $service_enable,
@@ -68,12 +62,9 @@ class carbon_c_relay::service (
 
       '7': {
         file { $service_file:
-          ensure  => file,
-          group   => 'root',
-          mode    => '0644',
-          owner   => 'root',
           content => template($service_template),
         }
+
         exec { 'daemon-reload':
           command     => '/bin/systemctl daemon-reload',
           subscribe   => File[$carbon_c_relay::service_file],
