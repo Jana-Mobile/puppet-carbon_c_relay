@@ -173,9 +173,6 @@ class carbon_c_relay (
   $worker_threads              = $carbon_c_relay::params::worker_threads
 ) inherits carbon_c_relay::params {
 
-  validate_re($::osfamily, '^(RedHat)', 'This module is only supported on RHEL/CentOS 6/7')
-  validate_re($::operatingsystemmajrelease, '^[67]$', 'This module is only supported on RHEL/CentOS 6/7')
-
   validate_bool(
     $package_manage,
     $service_enable,

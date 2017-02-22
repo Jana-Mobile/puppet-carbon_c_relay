@@ -43,40 +43,15 @@ class carbon_c_relay::service (
         mode    => '0644',
     }
 
-    case $::operatingsystemmajrelease {
-      '6': {
-        file {
-          $limits_file:
-            content => template($limits_template);
-
-          $service_file:
-            mode    => '0755',
-            content => template($service_template);
-        }
-
-        service { $service_name:
-          ensure   => $service_ensure,
-          enable   => $service_enable,
-        }
-      }
-
-      '7': {
-        file { $service_file:
-          content => template($service_template),
-        }
-
-        exec { 'daemon-reload':
-          command     => '/bin/systemctl daemon-reload',
-          subscribe   => File[$carbon_c_relay::service_file],
-          refreshonly => true,
-          user        => 'root'
-        } ~>
-
-        service { $service_name:
-          ensure   => $service_ensure,
-          enable   => $service_enable,
-        }
-      }
+    file {
+      $limits_file:
+        content => template($limits_template);
     }
+
+    service { $service_name:
+      ensure   => $service_ensure,
+      enable   => $service_enable,
+    }
+
   }
 }

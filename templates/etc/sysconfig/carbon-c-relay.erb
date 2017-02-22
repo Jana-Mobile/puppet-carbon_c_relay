@@ -32,7 +32,7 @@
   <%- if @limit_nproc %>ulimit -u <%= @limit_nproc %><% end %>
 <% end -%>
 
-ARGS="-p <%= @listen -%>
+DAEMON_ARGS="-p <%= @listen -%> -f <%= @config_file -%>
 <% if @interface %> -i <%= @interface %><% end -%>
  -l <%= @log_dir %>/<%= @log_file -%>
 <% if @worker_threads %> -w <%= @worker_threads %><% end -%>
