@@ -15,10 +15,8 @@ class carbon_c_relay::service (
   $pid_file         = $carbon_c_relay::pid_file,
   $service_enable   = $carbon_c_relay::service_enable,
   $service_ensure   = $carbon_c_relay::service_ensure,
-  $service_file     = $carbon_c_relay::service_file,
   $service_manage   = $carbon_c_relay::service_manage,
   $service_name     = $carbon_c_relay::service_name,
-  $service_template = $carbon_c_relay::service_template,
   $user             = $carbon_c_relay::user,
 ) {
 

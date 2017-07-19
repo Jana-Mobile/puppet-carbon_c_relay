@@ -30,13 +30,8 @@ class carbon_c_relay::params {
   $server_queue_size           = 25000
   $service_enable              = true
   $service_ensure              = running
-  $service_file                = $::operatingsystemmajrelease ? {
-    '6' => '/etc/init.d/carbon-c-relay',
-    '7' => '/usr/lib/systemd/system/carbon-c-relay.service',
-  }
   $service_manage              = true
   $service_name                = $package_name
-  $service_template            = "carbon_c_relay${service_file}.erb"
   $sorted_matches              = false
   $sorted_rewrites             = false
   $statistics_hostname         = undef
