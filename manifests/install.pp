@@ -10,6 +10,9 @@ class carbon_c_relay::install (
 
   if $package_manage {
 
+    package { $package_name:
+      ensure => $package_ensure
+    } ->
     group { $group:
       ensure => present
     } ->
@@ -18,8 +21,5 @@ class carbon_c_relay::install (
       groups => $group,
     }
 
-    package { $package_name:
-      ensure => $package_ensure
-    }
   }
 }
